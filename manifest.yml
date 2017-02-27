@@ -1,0 +1,8 @@
+applications:
+- name: fiftytwo-ibis
+  memory: 256M
+  instances: 1
+  random-route: true
+  disk_quota: 1024M
+  command: ibis
+  buildpack: swift_buildpack
