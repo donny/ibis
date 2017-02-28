@@ -10,51 +10,12 @@ HeliumLogger.use()
 // Create a new router
 let router = Router()
 
-// Redis
-let redis = Redis()
-
-let redisInfo = ProcessInfo.processInfo.environment["VCAP_SERVICES"] ?? "{}"
-let redisInfoJson = JSON.parse(string: redisInfo)
-let redisCreds = redisInfoJson["rediscloud"][0]["credentials"]
-
-let rHost = redisCreds["hostname"].string ?? ""
-let rPort = Int32(redisCreds["port"].string ?? "0") ?? 0
-let rPassword = redisCreds["password"].string ?? ""
-
-
-print("Redis \(rHost) \(rPort) \(rPassword)")
-
-
-redis.connect(host: rHost, port: rPort) { (redisError: NSError?) in
-    if let error = redisError {
-        print("________")
-        print(error)
-    }
-    else {
-      print("________")
-        print("Connected to Redis")
-        // set a key
-
-        redis.auth(rPassword) { (redisError: NSError?) in
-
-          redis.set("Redis", value: "on Swift") { (result: Bool, redisError: NSError?) in
-              if let error = redisError {
-                  print(error)
-              }
-              // get the same key
-              redis.get("Redis") { (string: RedisString?, redisError: NSError?) in
-                  if let error = redisError {
-                      print(error)
-                  }
-                  else if let string = string?.asString {
-                      print("Redis \(string)")
-                  }
-              }
-          }
-
-        }
-    }
-}
+// Create a new cache
+let cache = Cache(callback: { (error: NSError?) in
+  if let error = error {
+    print(error)
+  }
+})
 
 // Handle HTTP GET requests to /
 router.get("/") {
