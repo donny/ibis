@@ -1,8 +1,4 @@
-<html>
-<head></head>
-<body>
-
-<h1>Hello</h1>
+{% include "header.stencil" %}
 
 There are {{ articles.count }} articles.
 
@@ -10,5 +6,4 @@ There are {{ articles.count }} articles.
   - {{ article.title }} by {{ article.author }}.
 {% endfor %}
 
-</body>
-</html>
+{% include "footer.stencil" %}

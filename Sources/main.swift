@@ -23,10 +23,8 @@ let cache = Cache(callback: { (error: NSError?) in
 })
 
 
-// add Stencil Template Engine with a namespace with a custom tag
-let namespace = Namespace()
-router.add(templateEngine: StencilTemplateEngine(namespace: namespace))
-
+router.setDefault(templateEngine: StencilTemplateEngine())
+router.all("/static", middleware: StaticFileServer())
 
 // Handle HTTP GET requests to /
 router.get("/") {
@@ -49,8 +47,7 @@ router.get("/articles") {
             ]
         ]
 
-        // we have to specify file extension here since Stencil is not the default engine
-        try response.render("document.stencil", context: context).end()
+        try response.render("document", context: context).end()
     } catch {
         print("Failed to render template \(error)")
     }
