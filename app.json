@@ -1,9 +1,0 @@
-{
-    "name": "Ibis",
-    "repository": "https://github.com/donny/ibis",
-    "buildpacks": [
-        {
-            "url": "https://github.com/kylef/heroku-buildpack-swift"
-        }
-    ]
-}
