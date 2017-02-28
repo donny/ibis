@@ -1,0 +1,14 @@
+<html>
+<head></head>
+<body>
+
+<h1>Hello</h1>
+
+There are {{ articles.count }} articles.
+
+{% for article in articles %}
+  - {{ article.title }} by {{ article.author }}.
+{% endfor %}
+
+</body>
+</html>
