@@ -9,13 +9,12 @@ public class Cache {
   private let redisPass: String
 
   init(callback: (NSError?) -> Void) {
-    let redisInfo = ProcessInfo.processInfo.environment["VCAP_SERVICES"] ?? "{}"
-    let redisInfoJson = JSON.parse(string: redisInfo)
-    let redisCreds = redisInfoJson["rediscloud"][0]["credentials"]
-    redisHost = redisCreds["hostname"].string ?? ""
-    redisPort = Int32(redisCreds["port"].string ?? "0") ?? 0
-    redisPass = redisCreds["password"].string ?? ""
-
+    let serviceInfo = ProcessInfo.processInfo.environment["VCAP_SERVICES"] ?? "{}"
+    let serviceInfoJson = JSON.parse(string: redisInfo)
+    let serviceCreds = redisInfoJson["rediscloud"][0]["credentials"]
+    redisHost = serviceCreds["hostname"].string ?? ""
+    redisPort = Int32(serviceCreds["port"].string ?? "0") ?? 0
+    redisPass = serviceCreds["password"].string ?? ""
 
     redis.connect(host: redisHost, port: redisPort) { (redisError: NSError?) in
       if let error = redisError {

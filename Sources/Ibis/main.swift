@@ -8,6 +8,7 @@ import SwiftyJSON
 import KituraStencil // required for using StencilTemplateEngine
 import Stencil // required for adding a Stencil namespace to StencilTemplateEngine
 
+import RestKit
 
 // Initialize HeliumLogger
 HeliumLogger.use()
@@ -29,6 +30,22 @@ router.all("/static", middleware: StaticFileServer())
 // Handle HTTP GET requests to /
 router.get("/") {
     request, response, next in
+    response.send("Hello, World!")
+    next()
+}
+
+router.get("/analyzer") {
+    request, response, next in
+
+    let analyzer = Analyzer()
+    let text = "Hello World How are you Today, I'm so mad"
+    let failure = { (error: RestError) in print(error) }
+
+    analyzer.getTone(text: text, failure: failure) { tones in
+      print(tones)
+    }
+
+
     response.send("Hello, World!")
     next()
 }
