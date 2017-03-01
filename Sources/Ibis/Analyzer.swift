@@ -11,8 +11,8 @@ public class Analyzer {
 
   init() {
     let serviceInfo = ProcessInfo.processInfo.environment["VCAP_SERVICES"] ?? "{}"
-    let serviceInfoJson = JSON.parse(string: redisInfo)
-    let serviceCreds = redisInfoJson["tone_analyzer"][0]["credentials"]
+    let serviceInfoJson = JSON.parse(string: serviceInfo)
+    let serviceCreds = serviceInfoJson["tone_analyzer"][0]["credentials"]
     username = serviceCreds["username"].string ?? ""
     password = serviceCreds["password"].string ?? ""
 

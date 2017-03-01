@@ -10,8 +10,8 @@ public class Cache {
 
   init(callback: (NSError?) -> Void) {
     let serviceInfo = ProcessInfo.processInfo.environment["VCAP_SERVICES"] ?? "{}"
-    let serviceInfoJson = JSON.parse(string: redisInfo)
-    let serviceCreds = redisInfoJson["rediscloud"][0]["credentials"]
+    let serviceInfoJson = JSON.parse(string: serviceInfo)
+    let serviceCreds = serviceInfoJson["rediscloud"][0]["credentials"]
     redisHost = serviceCreds["hostname"].string ?? ""
     redisPort = Int32(serviceCreds["port"].string ?? "0") ?? 0
     redisPass = serviceCreds["password"].string ?? ""
