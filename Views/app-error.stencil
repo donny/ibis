@@ -7,17 +7,12 @@
 
     <div class="one-half column" style="margin-top: 25%">
 
-      <h3>App: {{ id }}</h3>
+      <h2>Error 😱</h2>
+      <h5>In Getting Reviews for App: {{ appId }}</h5>
 
-      <h5>There are {{ reviews.count }} reviews.</h5>
+    </div>
 
-
-      <ul>
-      {% for review in reviews %}
-      <li><h4>{{ review.author }}</h4></li>
-      {% endfor %}
-      </ul>
-
+    <div class="one-half column" style="margin-top: 25%">
     </div>
 
   </div>

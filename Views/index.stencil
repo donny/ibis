@@ -1,11 +1,26 @@
 {% include "header.stencil" %}
 
-There are {{ apps.count }} apps.
+<!-- Primary Page Layout
+–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<div class="container">
+  <div class="row">
 
-<ul>
-{% for app in apps %}
-<li>{{ app.name }} : {{ app.id }}</li>
-{% endfor %}
-</ul>
+    <div class="one-half column" style="margin-top: 25%">
+
+      <h2>Ibis</h2>
+      <h5>Analysing the Tone of User Reviews</h5>
+
+    </div>
+
+    <div class="one-half column" style="margin-top: 25%">
+      <ul>
+      {% for app in apps %}
+      <li><a href="/app/{{app.id}}">{{ app.name }}</a></li>
+      {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+</div>
 
 {% include "footer.stencil" %}

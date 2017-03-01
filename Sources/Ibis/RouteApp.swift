@@ -20,18 +20,52 @@ public struct RouteApp {
 
       guard let appId = request.parameters["id"] else { return }
 
-      do {
-        let context: [String: Any] = [
-          "apps": [
-            [ "name": "Realestate", "id": "123" ],
-            [ "name": "Domain", "id": "456" ]
-          ],
-          "id": appId
-        ]
+      let url = "https://itunes.apple.com/au/rss/customerreviews/id=\(appId)/sortBy=mostRecent/json"
 
-        try response.render("app", context: context).end()
-      } catch {
-        print("Failed to render template \(error)")
+      // Construct request
+      let request = RestRequest(
+        method: .GET,
+        url: url,
+        acceptType: "application/json",
+        contentType: "application/json"
+      )
+
+      // Execute request
+      request.responseJSON { reqResponse in
+        switch reqResponse {
+
+        case .success(let json):
+
+          var reviews = json["feed"]["entry"].arrayValue
+          reviews.remove(at: 0) // The first entry is not a review
+
+          let reviewsDict = reviews.map({ review -> [String: String] in
+              var revDict: [String: String] = [:]
+              revDict["title"] = review["title"]["label"].stringValue
+              revDict["version"] = review["im:version"]["label"].stringValue
+              revDict["rating"] = review["im:rating"]["label"].stringValue
+              revDict["content"] = review["content"]["label"].stringValue
+              revDict["author"] = review["author"]["name"]["label"].stringValue
+              return revDict
+          })
+
+          do {
+            let context: [String: Any] = ["reviews": reviewsDict, "appId": appId]
+            try response.render("app", context: context).end()
+          } catch {
+            print("Failed to render template \(error)")
+          }
+
+        case .failure(let error):
+
+          do {
+            let context: [String: Any] = ["appId": appId]
+            try response.render("app-error", context: context).end()
+          } catch {
+            print("Failed to render template \(error)")
+          }
+
+        }
       }
     }
 

@@ -9,8 +9,11 @@ public struct RouteIndex {
       do {
         let context: [String: Any] = [
           "apps": [
-            [ "name": "Realestate", "id": "123" ],
-            [ "name": "Domain", "id": "456" ]
+            [ "name": "Realestate", "id": "404667893" ],
+            [ "name": "Domain", "id": "319908646" ],
+            [ "name": "Homely", "id": "1004229463" ],
+            [ "name": "realestateView", "id": "474698182" ],
+            [ "name": "All Homes", "id": "499208265" ]
           ]
         ]
 
