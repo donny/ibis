@@ -1,9 +1,0 @@
-{% include "header.stencil" %}
-
-There are {{ articles.count }} articles.
-
-{% for article in articles %}
-  - {{ article.title }} by {{ article.author }}.
-{% endfor %}
-
-{% include "footer.stencil" %}

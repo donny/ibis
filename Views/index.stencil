@@ -1,0 +1,11 @@
+{% include "header.stencil" %}
+
+There are {{ apps.count }} apps.
+
+<ul>
+{% for app in apps %}
+<li>{{ app.name }} : {{ app.id }}</li>
+{% endfor %}
+</ul>
+
+{% include "footer.stencil" %}
