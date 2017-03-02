@@ -19,7 +19,18 @@ public class Analyzer {
     toneAnalyzer = ToneAnalyzer(username: username, password: password, version: version)
   }
 
-  func getTone(text: String, failure: ((RestError) -> Void)? = nil, success: @escaping (ToneAnalysis) -> Void) {
-    toneAnalyzer.getTone(text: text, failure: failure, success: success)
+  func getTone(text: String, failure: ((RestError) -> Void)? = nil, success: @escaping ([String: String]) -> Void) {
+    toneAnalyzer.getTone(text: text, failure: failure, success: { toneAnalysis in
+      var toneDictionary = [String: String]()
+      for toneCategory in toneAnalysis.documentTone {
+        print(toneCategory.name)
+        for tone in toneCategory.tones {
+          toneDictionary[tone.name] = String(tone.score)
+          print("\(tone.name): \(tone.score)")
+        }
+        print("---")
+      }
+      success(toneDictionary)
+    })
   }
 }

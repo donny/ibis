@@ -14,7 +14,7 @@
 
       <ul>
       {% for review in reviews %}
-      <li><h4>{{ review.author }}</h4></li>
+      <li><h4>{{ review.analysis.Anger }}</h4></li>
       {% endfor %}
       </ul>
 
