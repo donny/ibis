@@ -3,5 +3,5 @@ applications:
   memory: 128M
   instances: 1
   disk_quota: 1024M
-  command: ibis
+  command: Ibis
   buildpack: swift_buildpack
