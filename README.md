@@ -1,6 +1,6 @@
 # ibis
 
-Ibis is a web site using Kitura that displays tone analysis of iOS App Store reviews using [IBM Watson Tone Analyzer](https://www.ibm.com/watson/developercloud/tone-analyzer.html) and hosted on [IBM Bluemix](https://developer.ibm.com/swift/swift-on-ibm-cloud/).
+Ibis is a web site using [Kitura](https://developer.ibm.com/swift/kitura/) that displays tone analysis of iOS App Store reviews using [IBM Watson Tone Analyzer](https://www.ibm.com/watson/developercloud/tone-analyzer.html) and hosted on [IBM Bluemix](https://developer.ibm.com/swift/swift-on-ibm-cloud/).
 
 ### Background
 
