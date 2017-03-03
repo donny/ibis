@@ -73,4 +73,4 @@ group.wait()
 
 ### Conclusion
 
-...
+This project is my first attempt in server-side Swift using Kitura. It's good to use a programming language that I like but on one hand, the tooling for web programming in Swift is not there yet. The cycle of write-compile-run-observe is a bit too much and I found that it slowed me down quite a bit. And when we push to Bluemix, it takes a while to provision the instance (i.e. Docker for Swift on Linux) and to deploy the code. But on the other hand, Swift gives us type safety and it generally performs better compared to languages with garbage collection. IBM Watson Tone Analyzer is really great to analyse the tone of text and I find it quite accurate.
