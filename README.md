@@ -22,7 +22,54 @@ The tone analysis for each user review is then cached on [Redis Cloud](https://c
 
 The web UI is built using the [Stencil Template Engine](https://stencil.fuller.li/en/latest/) and [Skeleton](http://getskeleton.com), a simple and responsive CSS boilerplate.
 
-Take a look at the file [`RouteApp.swift`](https://github.com/donny/ibis/blob/master/Sources/Ibis/RouteApp.swift) for the main implementation of Ibis. As a note, we use `Dispatch Group` and `Dispatch Queue` to schedule tasks and to avoid *callback hell*.
+Take a look at the file [`RouteApp.swift`](https://github.com/donny/ibis/blob/master/Sources/Ibis/RouteApp.swift) for the main implementation of Ibis. As a note, we use `Dispatch Group` and `Dispatch Queue` to schedule tasks and to avoid *callback hell*:
+
+```swift
+// Construct dispatch queue and group
+let queue: DispatchQueue = DispatchQueue.global(qos: .default)
+let group: DispatchGroup = DispatchGroup()
+
+// It's in this for-loop style because we would like to modify reviewsDict
+for index in 0..<reviewsDict.count {
+  let review = reviewsDict[index]
+  let key = "key-\(appId)-\(review["author"])-\(review["version"])"
+
+  // Start of the group task
+  group.enter()
+  queue.async {
+    guard let text = review["content"] as? String else {
+      group.leave()
+      return
+    }
+
+    // Check the cache
+    cache.get(key) { (results: [String: String], redisError: NSError?) in
+      if let _ = redisError {
+        group.leave()
+        return
+      }
+
+      // Use the cache
+      if !results.isEmpty {
+        reviewsDict[index]["analysis"] = results
+        group.leave()
+      } else {
+        // Get the tone analysis
+        analyzer.getTone(text: text, failure: { error in
+          group.leave()
+        }, success: { toneAnalysis in
+          reviewsDict[index]["analysis"] = toneAnalysis
+          // Save it to the cache
+          cache.set(key, dictionary: toneAnalysis) { _ in group.leave() }
+        })
+      }
+    }
+  }
+  // End of the group task
+}
+
+group.wait()
+```
 
 ### Conclusion
 
