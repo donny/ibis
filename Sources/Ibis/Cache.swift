@@ -44,7 +44,10 @@ public class Cache {
 
   func set(_ key: String, dictionary: [String: String], callback: (Bool, NSError?) -> Void) -> Void {
     var pairs = [(String, String)]()
-    for (key, value) in dictionary { pairs.append((key, value)) }
+    for (key, value) in dictionary {
+      let k = key.replacingOccurrences(of: " ", with: "").lowercased()
+      pairs.append((k, value))
+    }
 
     redis.hmsetArrayOfKeyValues(key, fieldValuePairs: pairs) { (result: Bool, redisError: NSError?) in
       if let error = redisError {

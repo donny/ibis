@@ -16,6 +16,10 @@ public struct RouteApp {
 
   private static let whitelisted = ["404667893", "319908646","1004229463", "474698182", "499208265"]
 
+  private static let appNames = [ "404667893": "Realestate",
+        "319908646": "Domain", "1004229463": "Homely",
+        "474698182": "realestateView", "499208265": "All Homes"]
+
   private static func render(response: RouterResponse, name: String, context: [String: Any]) {
     do {
       try response.render(name, context: context).end()
@@ -49,6 +53,7 @@ public struct RouteApp {
         return
       }
 
+      let appName = appNames[appId] ?? ""
       let url = "https://itunes.apple.com/au/rss/customerreviews/id=\(appId)/sortBy=mostRecent/json"
 
       // Construct request
@@ -61,14 +66,14 @@ public struct RouteApp {
 
         case .failure(let error):
 
-          let context: [String: Any] = ["appId": appId, "error": error]
+          let context: [String: Any] = ["appName": appName, "appId": appId, "error": error]
           render(response: response, name: "app-error", context: context)
 
         case .success(let json):
 
           var reviews = json["feed"]["entry"].arrayValue
           reviews.remove(at: 0) // The first entry is not a review
-          reviews = Array(reviews.prefix(3)) // We only get the first 5
+          reviews = Array(reviews.prefix(3)) // We only get the first 3
 
           var reviewsDict = reviews.map({ transformReview(json: $0) })
 
@@ -79,7 +84,7 @@ public struct RouteApp {
           // It's in this for-loop style because we would like to modify reviewsDict
           for index in 0..<reviewsDict.count {
             let review = reviewsDict[index]
-            let key = "\(appId)-\(review["author"])-\(review["version"])"
+            let key = "key-\(appId)-\(review["author"])-\(review["version"])"
 
             // Start of the group task
             group.enter()
@@ -117,7 +122,7 @@ public struct RouteApp {
 
           group.wait()
 
-          let context: [String: Any] = ["reviews": reviewsDict, "appId": appId]
+          let context: [String: Any] = ["reviews": reviewsDict, "appName": appName, "appId": appId]
           render(response: response, name: "app", context: context)
         }
       }

@@ -7,18 +7,108 @@
 
     <div class="one-half column" style="margin-top: 25%">
 
-      <h3>App: {{ id }}</h3>
-
+      <h2>App: {{ appName }}</h2>
       <h5>There are {{ reviews.count }} reviews.</h5>
 
+    </div>
 
+    <div class="one-half column" style="margin-top: 25%">
       <ul>
       {% for review in reviews %}
-      <li><h4>{{ review.analysis.Anger }}</h4></li>
+      <li>
+        <div>
+          <h4>{{ review.title }} &middot; {{ review.rating }} stars</h4>
+          <h6><em>From:</em> {{ review.author }} &middot; <em>version:</em> {{ review.version }}</h6>
+
+          <h4>{{ review.content }}</h4>
+
+          <table class="u-full-width">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Tone</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Emotional Tone -->
+              <tr>
+                <td>Emotional Tone</td>
+                <td>Joy</td>
+                <td>{{ review.analysis.joy }}</td>
+              </tr>
+              <tr>
+                <td>Emotional Tone</td>
+                <td>Fear</td>
+                <td>{{ review.analysis.fear }}</td>
+              </tr>
+              <tr>
+                <td>Emotional Tone</td>
+                <td>Sadness</td>
+                <td>{{ review.analysis.sadness }}</td>
+              </tr>
+              <tr>
+                <td>Emotional Tone</td>
+                <td>Disgust</td>
+                <td>{{ review.analysis.disgust }}</td>
+              </tr>
+              <tr>
+                <td>Emotional Tone</td>
+                <td>Anger</td>
+                <td>{{ review.analysis.anger }}</td>
+              </tr>
+              <!-- Social Tone -->
+              <tr>
+                <td>Social Tone</td>
+                <td>Openness</td>
+                <td>{{ review.analysis.openness }}</td>
+              </tr>
+              <tr>
+                <td>Social Tone</td>
+                <td>Conscientiousness</td>
+                <td>{{ review.analysis.conscientiousness }}</td>
+              </tr>
+              <tr>
+                <td>Social Tone</td>
+                <td>Extraversion</td>
+                <td>{{ review.analysis.extraversion }}</td>
+              </tr>
+              <tr>
+                <td>Social Tone</td>
+                <td>Agreeableness</td>
+                <td>{{ review.analysis.agreeableness }}</td>
+              </tr>
+              <tr>
+                <td>Social Tone</td>
+                <td>Emotional Range</td>
+                <td>{{ review.analysis.emotionalrange }}</td>
+              </tr>
+              <!-- Language Tone -->
+              <tr>
+                <td>Language Tone</td>
+                <td>Analytical</td>
+                <td>{{ review.analysis.analytical }}</td>
+              </tr>
+              <tr>
+                <td>Language Tone</td>
+                <td>Confidence</td>
+                <td>{{ review.analysis.confidence }}</td>
+              </tr>
+              <tr>
+                <td>Language Tone</td>
+                <td>Tentative</td>
+                <td>{{ review.analysis.tentative }}</td>
+              </tr>
+
+            </tbody>
+          </table>
+
+        </div>
+      </li>
       {% endfor %}
       </ul>
-
     </div>
+
 
   </div>
 </div>
