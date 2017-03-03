@@ -31,4 +31,32 @@ public class Cache {
       }
     }
   }
+
+  func set(_ key: String, dictionary: [String: String], callback: (Bool, NSError?) -> Void) -> Void {
+    var pairs = [(String, String)]()
+    for (key, value) in dictionary { pairs.append((key, value)) }
+
+    redis.hmsetArrayOfKeyValues(key, fieldValuePairs: pairs) { (result: Bool, redisError: NSError?) in
+      if let error = redisError {
+        callback(false, error)
+        return
+      }
+
+      callback(result, nil)
+    }
+  }
+
+  func get(_ key: String, callback: ([String: String], NSError?) -> Void) -> Void {
+    var keyValues = [String: String]()
+
+    redis.hgetall(key) { (result: [String: RedisString], redisError: NSError?) in
+      if let error = redisError {
+        callback([:], error)
+        return
+      }
+
+      for (key, value) in result { keyValues[key] = value.asString }
+      callback(keyValues, nil)
+    }
+  }
 }
