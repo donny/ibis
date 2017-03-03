@@ -23,12 +23,9 @@ public class Analyzer {
     toneAnalyzer.getTone(text: text, failure: failure, success: { toneAnalysis in
       var toneDictionary = [String: String]()
       for toneCategory in toneAnalysis.documentTone {
-        print(toneCategory.name)
         for tone in toneCategory.tones {
           toneDictionary[tone.name] = String(tone.score)
-          print("\(tone.name): \(tone.score)")
         }
-        print("---")
       }
       success(toneDictionary)
     })

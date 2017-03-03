@@ -52,12 +52,8 @@ public struct RouteApp {
       let url = "https://itunes.apple.com/au/rss/customerreviews/id=\(appId)/sortBy=mostRecent/json"
 
       // Construct request
-      let request = RestRequest(
-        method: .GET,
-        url: url,
-        acceptType: "application/json",
-        contentType: "application/json"
-      )
+      let jsonType = "application/json"
+      let request = RestRequest(method: .GET, url: url, acceptType: jsonType, contentType: jsonType)
 
       // Execute request
       request.responseJSON { reqResponse in
@@ -72,29 +68,51 @@ public struct RouteApp {
 
           var reviews = json["feed"]["entry"].arrayValue
           reviews.remove(at: 0) // The first entry is not a review
-          reviews = Array(reviews.prefix(1)) // We only get the first 3
+          reviews = Array(reviews.prefix(3)) // We only get the first 5
 
           var reviewsDict = reviews.map({ transformReview(json: $0) })
 
+          // Construct dispatch queue and group
           let queue: DispatchQueue = DispatchQueue.global(qos: .default)
           let group: DispatchGroup = DispatchGroup()
 
+          // It's in this for-loop style because we would like to modify reviewsDict
           for index in 0..<reviewsDict.count {
+            let review = reviewsDict[index]
+            let key = "\(appId)-\(review["author"])-\(review["version"])"
+
+            // Start of the group task
             group.enter()
             queue.async {
-              guard let text = reviewsDict[index]["content"] as? String else {
+              guard let text = review["content"] as? String else {
                 group.leave()
                 return
               }
 
-              analyzer.getTone(text: text, failure: { error in
-                print("ERROR")
-                group.leave()
-              }, success: { toneAnalysis in
-                reviewsDict[index]["analysis"] = toneAnalysis
-                group.leave()
-              })
+              // Check the cache
+              cache.get(key) { (results: [String: String], redisError: NSError?) in
+                if let _ = redisError {
+                  group.leave()
+                  return
+                }
+
+                // Use the cache
+                if !results.isEmpty {
+                  reviewsDict[index]["analysis"] = results
+                  group.leave()
+                } else {
+                  // Get the tone analysis
+                  analyzer.getTone(text: text, failure: { error in
+                    group.leave()
+                  }, success: { toneAnalysis in
+                    reviewsDict[index]["analysis"] = toneAnalysis
+                    // Save it to the cache
+                    cache.set(key, dictionary: toneAnalysis) { _ in group.leave() }
+                  })
+                }
+              }
             }
+            // End of the group task
           }
 
           group.wait()
